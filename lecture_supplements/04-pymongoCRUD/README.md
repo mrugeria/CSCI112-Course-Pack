@@ -34,7 +34,7 @@ db.dropDatabase();
 
 ## Code Structure
 
-This specific repo contains 6 python files, each aiming to teach you the syntax of the CRUD operations in Pymongo. This tutorial will go through these files and run them one at a time.
+This specific repo contains 6 python files, each aiming to teach you the syntax of the CRUD operations in Pymongo. This tutorial will go through these files and your task is to run them one at a time when instructed.
 
 ---
 ---
