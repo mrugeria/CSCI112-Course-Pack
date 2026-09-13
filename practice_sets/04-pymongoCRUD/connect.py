@@ -9,3 +9,5 @@ if __name__ == "__main__":
     conn = pymongo.MongoClient('localhost', 27017)
 
     print(conn) #print the connection object to see what it contains
+
+    conn.close() # this line closes the previously created connection to localhost on port 27017
