@@ -68,8 +68,10 @@ On line 11, the response is printed.
 
 >[!NOTE]
 > **TO DO: Connect to your MongoDB Database and print the connection object returned.**
-> 1. Copy and Paste lines 1-11 of `connect.py` to a blank python file in your EC2 server.
-> 2. Run the python code by executing `python3 <your_code_filename.py>`
+> 1. Copy and Paste lines 1-11 of `connect.py` to a blank python file in your local VSCode. 
+> 2. Complete the code by adding any essential imports, open connection, and close connection code blocks in case they are not present.
+> 3. Copy and paste your final code to a blank file in your EC2 server using nano.
+> 4. Run the python code by executing `python3 <your_code_filename.py>`
 ><br><br>
 > Expected Output is similar to this screenshot:
 > ![Expected Output is similar to this screenshot](../../assets/04-connect-success.png)
@@ -186,8 +188,10 @@ We store the output of the commands so that we can print what the responses are.
 
 >[!NOTE]
 > **TO DO: Insert the documents to the collection.**
-> 1. Copy and Paste lines 1-51 of `insert.py` to a blank python file in your EC2 server.
-> 2. Run the python code by executing `python3 <your_code_filename.py>`
+> 1. Copy and Paste lines 1-51 of `insert.py` to a blank python file in your local VSCode. 
+> 2. Complete the code by adding any essential imports, open connection, and close connection code blocks in case they are not present.
+> 3. Copy and paste your final code to a blank file in your EC2 server using nano.
+> 4. Run the python code by executing `python3 <your_code_filename.py>`
 ><br><br>
 > Expected Output is similar to this screenshot:
 > ![Expected Output is similar to this screenshot](../../assets/04-insert-one.png)
@@ -217,8 +221,10 @@ The syntax for using `insert_many()` can be found on line 131.
 
 >[!NOTE]
 > **TO DO: Insert the documents to the collection.**
-> 1. Copy and Paste lines 56-132 of `insert.py` to a blank python file in your EC2 server. Make sure to import all the libraries again if you are using a completely new file. If you are using the file you used previouly, make sure to comment or remove the previous insert_one operations to avoid duplicate insertions.
-> 2. Run the python code by executing `python3 <your_code_filename.py>`
+> 1. Copy and Paste lines 56-132 of `insert.py` to a blank python file in your local VSCode. 
+> 2. Complete the code by adding any essential imports, open connection, and close connection code blocks in case they are not present.
+> 3. Copy and paste your final code to a blank file in your EC2 server using nano.
+> 4. Run the python code by executing `python3 <your_code_filename.py>`
 ><br><br>
 > Expected Output is similar to this screenshot:
 > ![Expected Output is similar to this screenshot](../../assets/04-insert-many.png)
@@ -231,7 +237,7 @@ Your turn.
 >[!NOTE]
 > **TO DO: Insert your own documents to the collection.**
 > 1. Create 10 NEW transactions for the 3 new customers using the same transaction attributes. Make sure datatypes are correct.
-> 2. Copy it into your DB Server and run your python code.
+> 2. Copy it into your EC2 Server and run your python code.
 > 3. Check the results in MongoDB Compass.
 
 We mentioned in class that there are different types of numeric attributes that we can store in MongoDB:
@@ -244,8 +250,10 @@ For this demo, let's use the `test2` database.
 
 >[!NOTE]
 > **TO DO: Insert the special numeric documents to the collection.**
-> 1. Copy and Paste lines 135-147 of `insert.py` to a blank python file in your EC2 server. Make sure to import all the libraries again if you are using a completely new file. If you are using the file you used previouly, make sure to comment or remove the previous insert_one/insert_many operations to avoid duplicate insertions.
-> 2. Run the python code by executing `python3 <your_code_filename.py>`
+> 1. Copy and Paste lines 135-147 of `insert.py` to a blank python file in your local VSCode. 
+> 2. Complete the code by adding any essential imports, open connection, and close connection code blocks in case they are not present.
+> 3. Copy and paste your final code to a blank file in your EC2 server using nano.
+> 4. Run the python code by executing `python3 <your_code_filename.py>`
 > <br><br>
 > You can check the output in MongoDB Compass (Notice the datatypes of each value in each document):
 > ![Expected Output is similar to this screenshot](../../assets/04-insert-numbers.png)
@@ -275,8 +283,10 @@ On lines 13-16 of the `find.py` python file, we create the query1 variable that 
 
 >[!NOTE]
 > **TO DO: Execute `find_one()`.**
-> 1. Copy and Paste lines 1-22 of `find.py` to a blank python file in your EC2 server. Make sure to import all the libraries again if you are using a completely new file. If you are using the file you used previouly, make sure to comment or remove the previous operations to avoid duplicate executions.
-> 2. Run the python code by executing `python3 <your_code_filename.py>`
+> 1. Copy and Paste lines 1-22 of `find.py` to a blank python file in your local VSCode. 
+> 2. Complete the code by adding any essential imports, open connection, and close connection code blocks in case they are not present.
+> 3. Copy and paste your final code to a blank file in your EC2 server using nano.
+> 4. Run the python code by executing `python3 <your_code_filename.py>`
 ><br><br>
 > Expected Output is similar to this screenshot (It should be exactly 1 document):
 > ![Expected Output is similar to this screenshot](../../assets/04-find-one.png)
@@ -348,9 +358,11 @@ In the code above, the query parameter is stored in `query1`, while the update p
 
 >[!NOTE]
 > **TO DO: Execute `update_one()`.**
-> 1. Copy and Paste lines 1-25 of `update.py` to a blank python file in your EC2 server. Make sure to import all the libraries again if you are using a completely new file. If you are using the file you used previouly, make sure to comment or remove the previous operations to avoid duplicate executions.
-> 2. Run the python code by executing `python3 <your_code_filename.py>`
-> 3. Go to MongoDB Compass, navigate to your `ruralSavingsPrime.transactions` collection and run the following query<br>
+> 1. Copy and Paste lines 1-25 of `update.py` to a blank python file in your local VSCode. 
+> 2. Complete the code by adding any essential imports, open connection, and close connection code blocks in case they are not present.
+> 3. Copy and paste your final code to a blank file in your EC2 server using nano.
+> 4. Run the python code by executing `python3 <your_code_filename.py>`
+> 5. Go to MongoDB Compass, navigate to your `ruralSavingsPrime.transactions` collection and run the following query<br>
 > ```
 >{
 >        "transactionDate": { "$gte": ISODate("2019-01-01") },
