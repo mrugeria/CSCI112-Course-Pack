@@ -60,7 +60,7 @@ This line of code calls the `MongoClient()` function from `pymongo` to create a 
 
 On line 11, the response is printed.
 
->[!NOTE] TRY IT YOURSELF
+>[!TODO]
 > Try connecting to your MongoDB Database and print the connection object returned.
 > Copy and Paste lines 1-11 of `connect.py` to a blank python file in your EC2 server.
 > Run the python code by executing `python3 <your_code_filename.py>`
