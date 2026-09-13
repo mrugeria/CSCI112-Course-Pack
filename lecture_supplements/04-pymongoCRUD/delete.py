@@ -4,7 +4,7 @@ from bson.int64 import Int64
 from bson.decimal128 import Decimal128
 from decimal import Decimal
 
-if __name__: "__main__":
+if __name__ == "__main__":
 
     conn = pymongo.MongoClient("localhost", 27017) #connect to MongoDB
     db = conn["ruralSavingsPrime"] #use ruralSavingsPrime

@@ -19,7 +19,7 @@ if __name__ == "__main__":
     results1 = db["customerAccounts"].find_one(query1) # The find_one function accepts a dictionary as its parameter
 
     #results1 now contains result of our query. We can use this variable to output the single result.
-    # print(results1)
+    print(results1)
 
     #find_many
     results2 = db["customerAccounts"].find(query1)
