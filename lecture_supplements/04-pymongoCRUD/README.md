@@ -21,6 +21,7 @@ Once you are inside the repository, you can now run the import script which will
 
 1. Go to `/home/ubuntu/CSCI112-Course-Pack/lecture_supplements/04-pymongoCRUD/`
 2. Run the script: `python3 import.py`
+3. Validate in MongoDB Compass or Mongo Shell if the `ruralSavingsPrime` database is existing and there are 2 collections under it named `customerAccounts` and `transactions`.
 
 ## Reverting to the Original Database State
 
