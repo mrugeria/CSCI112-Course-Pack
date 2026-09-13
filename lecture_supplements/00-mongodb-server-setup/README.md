@@ -155,3 +155,17 @@ test>
 
 This indicates that mongosh has connected to your MongoDB instance and you can start running commands. If you see any errors, it might indicate an issue with the installation or connection.
 
+## Connecting to your MongoDB Database using Compass
+
+1. Download MongoDB Compass: https://www.mongodb.com/try/download/compass
+2. Open MongoDB Compass and click the plus button adjacent to "CONNECTIONS"
+![new connection](../../assets/00-compass-new-connection.png)
+3. Add a name to the connection. Any name will do like "MongoDB Database".
+4. On the New Connection Window, click on Advanced Connection Options > Proxy/SSH > SSH with Identity File
+![new connection](../../assets/00-compass-setup.png)
+5. Fill in the details according to the image below:
+![new connection](../../assets/00-compass-ssh-config.png)
+6. Click Save & Connect. You should see your connection on the left panel under CONNECTIONS.
+
+> [!WARNING]
+> Your AWS Lab must be started and the correct public IP must be used for the configuration. Always edit this connection whenever your lab restarts.
