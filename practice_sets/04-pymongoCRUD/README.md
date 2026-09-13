@@ -242,7 +242,7 @@ For this demo, let's use the `test2` database.
 
 >[!NOTE]
 > **TO DO: Insert the special numeric documents to the collection.**
-> 1. Copy and Paste lines 135-147 of `insert.py` to a blank python file in your EC2 server. Make sure to import all the libraries again if you are using a completely new file. If you are using the file you used previouly, make sure to comment or remove the previous insert_one operations to avoid duplicate insertions.
+> 1. Copy and Paste lines 135-147 of `insert.py` to a blank python file in your EC2 server. Make sure to import all the libraries again if you are using a completely new file. If you are using the file you used previouly, make sure to comment or remove the previous insert_one/insert_many operations to avoid duplicate insertions.
 > 2. Run the python code by executing `python3 <your_code_filename.py>`
 > <br><br>
 > You can check the output in MongoDB Compass (Notice the datatypes of each value in each document):
@@ -252,3 +252,57 @@ For this demo, let's use the `test2` database.
 
 ### `find.py`
 
+To effectively make use of `find()` functions, we must have a significant number of documents in our collections. Thus, we'll be using what we've imported to our MongoDB database called `ruralSavingsPrime`. Make sure you have imported the data through `import.py`.
+
+#### Basic query syntax
+
+Same with inserting records, it is best to store our query in a dictionary variable first for a cleaner code structure.
+
+For example, if you want to query customers with age >= 30 and lives in either Pasig or Taguig City, you can create the following query and store it in a variable:
+
+```
+query1 = {
+    "age": { "$gt": 30 }, # Notice how the $gt operator is also enclosed in quotes unlike in mongosh
+    "address.city": { "$in": ["Pasig", "Taguig"] } # Same here. This is because we are creating a python dictionary.
+}
+```
+
+Similarly, querying can be done in 2 ways: `find_one()` and `find()` (many). Let's do `find_one()` first.
+
+On lines 13-16 of the `find.py` python file, we create the query1 variable that contains our query above. Then, on lines 19-22, we call the function `find_one()` on the `ruralSavingsPrime.customerAccounts` collection and store the result to `results1`. We then print the results.
+
+>[!NOTE]
+> **TO DO: Execute `find_one()`.**
+> 1. Copy and Paste lines 1-22 of `find.py` to a blank python file in your EC2 server. Make sure to import all the libraries again if you are using a completely new file. If you are using the file you used previouly, make sure to comment or remove the previous operations to avoid duplicate executions.
+> 2. Run the python code by executing `python3 <your_code_filename.py>`
+><br><br>
+> Expected Output is similar to this screenshot (It should be exactly 1 document):
+> ![Expected Output is similar to this screenshot](../../assets/04-find-one.png)
+
+You should get exactly 1 result. Now modify your code and remove `_one` from `find_one`and rerun the code. What's the output?
+
+It should say: <br>
+![Expected Output is similar to this screenshot](../../assets/04-find-cursor.png)
+
+>[!IMPORTANT]
+> This is called a **cursor** object. It's not a list, it's not a dictionary. A cursor object is basically an iterator that you can use to loop through the contents of the result. To print or access the results, simply use a `for..in` function in python.
+
+To iterate through a cursor object, you can use the code block in lines 29-30:
+
+```
+for result in results2:
+    print(result)
+```
+
+The output should be like this:<br>
+![Expected Output is similar to this screenshot](../../assets/04-find-cursor-contents.png)
+
+>[!NOTE]
+> **TO DO: Execute a query.**
+> 1. Using your previous querying knowledge, create a query that would show all transactions in 2024 with vendor="Canon" from the `ruralSavingsPrime.transactions` 
+> 2. Print the result in the terminal and validate the output.
+
+>[!NOTE]
+> **TO DO: Execute a query.**
+> 1. Using your previous querying knowledge, create a query that would show all customers with at least 1 account opened in the "Katipunan" branch from the `ruralSavingsPrime.customerAccounts` 
+> 2. Print the result in the terminal and validate the output.

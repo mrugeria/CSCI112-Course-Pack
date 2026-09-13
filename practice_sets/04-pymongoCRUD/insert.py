@@ -44,11 +44,11 @@ if __name__ == "__main__":
     #use the database first
     db = conn["ruralSavingsTest"] #use ruralSavingsTest in mongosh
 
-    # output1 = db["customerAccounts"].insert_one(document1) #insert document1 to ruralSavingsTest.customerAccounts
-    # output2 = db["transactions"].insert_one(document2) #insert document2 to ruralSavingsTest.transactions
+    output1 = db["customerAccounts"].insert_one(document1) #insert document1 to ruralSavingsTest.customerAccounts
+    output2 = db["transactions"].insert_one(document2) #insert document2 to ruralSavingsTest.transactions
 
-    # print(output1)
-    # print(output2)
+    print(output1)
+    print(output2)
 
     #insert_many() tutorial
 
@@ -128,8 +128,8 @@ if __name__ == "__main__":
         }
     ]
 
-    # output = db["customerAccounts"].insert_many(customerAccountsDocuments)
-    # print(output)
+    output = db["customerAccounts"].insert_many(customerAccountsDocuments)
+    print(output)
 
     #Inserting special numeric characters
     db = conn["test2"]
