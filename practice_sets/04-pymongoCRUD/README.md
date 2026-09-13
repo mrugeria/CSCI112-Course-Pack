@@ -306,3 +306,67 @@ The output should be like this:<br>
 > **TO DO: Execute a query.**
 > 1. Using your previous querying knowledge, create a query that would show all customers with at least 1 account opened in the "Katipunan" branch from the `ruralSavingsPrime.customerAccounts` 
 > 2. Print the result in the terminal and validate the output.
+
+----
+
+### `update.py`
+
+To demonstrate updates, we will be using the same task in the previous lecture:
+
+```
+Update all debit transactions in 2019:
+- Add the fraudTransactions value and set it toTrue (boolean). 
+- Rename the vendor field to fraudVendor.
+```
+
+Similar to querying, updating can be done in 2 ways: `update_one` and `update_many`. Let's look at lines 13-25 of our `update.py` python script.
+
+```
+query1 = {
+        "transactionDate": { '$gte': datetime(2019,1,1) },
+        "transactionDate": { '$lt': datetime(2020,1,1) }
+}
+
+# create the update commands and store them in the updates1 variable
+updates1 = {
+    '$set': { 'fraudTransactions': True }, # Notice that the value True starts with a capital letter as compared to the value true in mongoDB which starts with a lowercase letter
+    '$rename': { 'vendor': 'fraudVendor' }
+}
+
+# execute the update
+db['transactions'].update_one(query1, updates1) # We are only passing 2 parameters since we don't want to specify any options
+```
+
+Just like the previous operations, it's best to store the parameters of update functions in variables first before running the command for a cleaner code.
+
+In the code above, the query parameter is stored in `query1`, while the update parameter is stored in `update1`.
+
+>[!IMPORTANT]
+> The update_one() and update() functions accept 3 dictionaries as parameters. The first dictionary is the query which will be used to filter documents that will be updated. The second dictionary is the updates and renames, and the third and optional dictionary is the options. For code readability, we will declare the dictionaries as separate variables.
+
+>[!NOTE]
+> **TO DO: Execute `update_one()`.**
+> 1. Copy and Paste lines 1-25 of `update.py` to a blank python file in your EC2 server. Make sure to import all the libraries again if you are using a completely new file. If you are using the file you used previouly, make sure to comment or remove the previous operations to avoid duplicate executions.
+> 2. Run the python code by executing `python3 <your_code_filename.py>`
+> 3. Go to MongoDB Compass, navigate to your `ruralSavingsPrime.transactions` collection and run the following query<br>
+> ```
+>{
+>        "transactionDate": { "$gte": ISODate("2019-01-01") },
+>        "transactionDate": { "$lt": ISODate("2020-01-01") }
+>}
+>```
+> Expected Output should be similar to this screenshot (only one has `fraudTransactions: true` attribute):
+> ![Expected Output is similar to this screenshot](../../assets/04-update-one-compass.png)
+
+Now, try changing `update_one()` to `update_many()` and do the same steps above to check the results. All documents should already be updated like the image below:
+
+![Expected Output is similar to this screenshot](../../assets/04-update-many-compass.png)
+
+>[!NOTE]
+> **TO DO: Execute an update.**
+> 1. Using your previous updating knowledge, update all customers in `ruralSavingsPrime.customerAccounts` with at least 1 account opened in the "Katipunan" branch to include the `profile` attribute with the value `"Probably Atenean"`. The new attribute must be under the customer's details, not the account's.
+> 2. Validate the output in MongoDB Compass.
+
+---
+
+### `delete.py`
