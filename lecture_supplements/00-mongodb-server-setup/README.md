@@ -31,7 +31,8 @@ Now that our old instances are terminated, let us create a new instance which wi
 ![OS](../../assets/00-instance-type.png)
 5. Under Key pair, click "Create new key pair" > Enter a key pair name (any, avoid spaces) > RSA > .pem > Create key pair
 ![OS](../../assets/00-create-keypair.png)
->[!IMPORTANT] Your key pair should be downloaded. Keep it for future use.
+>[!IMPORTANT]
+> Your key pair should be downloaded. Keep it for future use.
 6. Do not modify anything else and click "Launch instance" at the lower right corner.
 
 ## Connect to your Instance
@@ -88,7 +89,7 @@ pip --version
 ```
 ![pip](../../assets/00-pip-version.png)
 
->[!NOTE]
+>[!WARNING]
 > If the pip version is not the same as the screenshot, notify the instructor immediately!
 3. Run the command below to install pymongo:
 ```
