@@ -370,3 +370,40 @@ Now, try changing `update_one()` to `update_many()` and do the same steps above 
 ---
 
 ### `delete.py`
+
+Using the previous fraud transactions that we updated, it's best to delete them to avoid any confusion within our `transactions` table. Let's do that using the delete functions in pymongo.
+
+Like the update functions, delete also has 2 functions: `delete_one()` and `delete_many()`. By now, you should already know the difference of the 2.
+
+> [!IMPORTANT]
+> The delete_one() and delete() functions accept 1 dictionary as parameter. You just need to provide a query and all documents that match that query will be deleted (if using delete_many()).
+
+Take a look at lines 12-26 in our `delete.py` python code:
+
+```
+# Let's declare our query
+query1 = {
+    'fraudTransactions': True
+}
+
+# You may also use different variations of this query, as long as the logic is correct
+query2 = {
+    'fraudVendor': { '$exists': True }
+}
+
+# Or use the same query for updating the records, this will also work
+query3 = {
+    "transactionDate": { '$gte': datetime(2019,1,1) },
+    "transactionDate": { '$lt': datetime(2020,1,1) }
+}
+```
+
+These 3 different queries pertain to the same exact set of documents.
+
+> [!WARNING]
+> Before running any delete operations, make sure your query is correct. Running a find operation before deleting is a good practice.
+
+>[!NOTE]
+> **TO DO: Execute the delete functions.**
+> 1. Using the provided queries, use one to execute `delete_one()` and use another to execute `delete_many()`.
+> 2. Validate the output in MongoDB Compass.
