@@ -72,6 +72,16 @@ On line 11, the response is printed.
 > Expected Output is similar to this screenshot:
 > ![Expected Output is similar to this screenshot](../../assets/04-connect-success.png)
 
+#### Accessing a Database
+
+On line 13, you can see this line of code:
+
+```
+db = conn["ruralSavingsTest"]
+```
+
+This is the equivalent of running `use ruralSavingsTest` in Mongo Shell.
+
 #### Disconnecting from a MongoDB Database
 
 When you have completed all your operations with the MongoDB Database, it is important to always close the connection so that stale connections are avoided. Stale connections may prevent incoming critical operations from being executed due to connection limits.
@@ -148,6 +158,97 @@ document2 = {
 ```
 
 >[!IMPORTANT]
-> Notice in `document2`, `transactionDate`'s value is datetime(2025,8,31).
+> Notice in `document2`, `transactionDate`'s value is `datetime(2025,8,31)`.
 > This is a conversion function from the `datetime` library in python.
 > When inserting data with special datatypes like dates, decimal 128, long integers, etc., the standard python conversion functions must be used before inserting the data in MongoDB.
+
+Now to actually insert the data into MongoDB, we can either use the `insert_one()` and `insert_many` functions.
+
+Let's try using `insert_one()` first. On line 45, we use the `ruralSavingsTest` database. Then on line 47, we run the `insert_one()` function by passing in our `document1` and `document2` variables.
+
+On lines 47-51, we execute the `insert_one()` function using these lines of code:
+
+```
+output1 = db["customerAccounts"].insert_one(document1) #insert document1 to ruralSavingsTest.customerAccounts
+output2 = db["transactions"].insert_one(document2) #insert document2 to ruralSavingsTest.transactions
+
+print(output1)
+print(output2)
+```
+
+We store the output of the commands so that we can print what the responses are.
+
+>[!IMPORTANT]
+> 1. Notice how `insert_one()` is run: we use the variable `db` that contains the connection to the MongoDB Database. This is a python dictionary and it also contains the available collections inside the database. One of which is our collection called `customerAccounts`. We access that collection using this syntax: `db["<collection_name">]`.
+> 2. The `insert_one()` function accepts a python dictionary as parameter, denoted by `{}`.
+
+>[!NOTE]
+> **TO DO: Insert the documents to the collection.**
+> 1. Copy and Paste lines 1-51 of `insert.py` to a blank python file in your EC2 server.
+> 2. Run the python code by executing `python3 <your_code_filename.py>`
+><br><br>
+> Expected Output is similar to this screenshot:
+> ![Expected Output is similar to this screenshot](../../assets/04-insert-one.png)
+> <br><br>
+> You can also check the output in MongoDB Compass:
+> ![Expected Output is similar to this screenshot](../../assets/04-compass-insert-one-cs.png)
+> ![Expected Output is similar to this screenshot](../../assets/04-compass-insert-one-tx.png)
+
+Okay, your turn.
+
+>[!NOTE]
+> **TO DO: Insert your own documents to the collection.**
+> 1. Create 1 NEW customer and 1 NEW transaction of that customer using the same attributes. Make sure datatypes are correct.
+> 2. Copy it into your DB Server and run your python code.
+> 3. Check the results in MongoDB Compass.
+
+Great, now let's try inserting multiple documents using `insert_many()`.
+
+`insert_many()` is just like your `insert_one()` but you have to provide a list of dictionaries instead of just a dictionary. Still, it's better to put it in a variable first to make our code look cleaner.
+
+On line 56-129 in the same code, we create a list variable called `customerAccountsDocuments` which contains 3 dictionaries for our 3 new customers.
+
+The syntax for using `insert_many()` can be found on line 131.
+
+>[!IMPORTANT]
+> The `insert_many()` function accepts a python list of dictionaries as parameter, denoted by `[{}]`. Passing a dictionary will make the function fail.
+
+>[!NOTE]
+> **TO DO: Insert the documents to the collection.**
+> 1. Copy and Paste lines 56-132 of `insert.py` to a blank python file in your EC2 server. Make sure to import all the libraries again if you are using a completely new file. If you are using the file you used previouly, make sure to comment or remove the previous insert_one operations to avoid duplicate insertions.
+> 2. Run the python code by executing `python3 <your_code_filename.py>`
+><br><br>
+> Expected Output is similar to this screenshot:
+> ![Expected Output is similar to this screenshot](../../assets/04-insert-many.png)
+> <br><br>
+> You can also check the output in MongoDB Compass:
+> ![Expected Output is similar to this screenshot](../../assets/04-compass-insert-many-cs.png)
+
+Your turn.
+
+>[!NOTE]
+> **TO DO: Insert your own documents to the collection.**
+> 1. Create 10 NEW transactions for the 3 new customers using the same transaction attributes. Make sure datatypes are correct.
+> 2. Copy it into your DB Server and run your python code.
+> 3. Check the results in MongoDB Compass.
+
+We mentioned in class that there are different types of numeric attributes that we can store in MongoDB:
+- int: 32-bit integer  
+- long: 64-bit integer  
+- double: 64-bit floating-point number  
+- decimal128: 128-bit decimal-based floating-point (for high-precision calculations like money)
+
+For this demo, let's use the `test2` database.
+
+>[!NOTE]
+> **TO DO: Insert the special numeric documents to the collection.**
+> 1. Copy and Paste lines 135-147 of `insert.py` to a blank python file in your EC2 server. Make sure to import all the libraries again if you are using a completely new file. If you are using the file you used previouly, make sure to comment or remove the previous insert_one operations to avoid duplicate insertions.
+> 2. Run the python code by executing `python3 <your_code_filename.py>`
+> <br><br>
+> You can check the output in MongoDB Compass (Notice the datatypes of each value in each document):
+> ![Expected Output is similar to this screenshot](../../assets/04-insert-numbers.png)
+
+---
+
+### `find.py`
+

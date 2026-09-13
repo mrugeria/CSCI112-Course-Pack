@@ -10,4 +10,7 @@ if __name__ == "__main__":
 
     print(conn) #print the connection object to see what it contains
 
+    db = conn["ruralSavingsTest"] #equivalent of mongosh use command
+    print(db)
+
     conn.close() # this line closes the previously created connection to localhost on port 27017
