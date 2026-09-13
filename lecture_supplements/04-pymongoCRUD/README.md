@@ -1,5 +1,7 @@
 # [04] Pymongo CRUD
 
+# Table of Contents
+
 ## Introduction
 
 This repo will be used to setup the sample dataset that can be used to apply the lectures on basic Pymongo CRUD operations. You will need to run this first in order to migrate the dateset into your own instance of MongoDB.
@@ -17,7 +19,7 @@ db.dropDatabase();
 
 Once you are inside the repository, you can now run the import script which will import database objects into your MongoDB database. Follow these steps:
 
-1. Go to `/home/ubuntu/CSCI112-Course-Pack/practice_sets/04-pymongoCRUD/`
+1. Go to `/home/ubuntu/CSCI112-Course-Pack/lecture_supplements/04-pymongoCRUD/`
 2. Run the script: `python3 import.py`
 
 ## Reverting to the Original Database State
