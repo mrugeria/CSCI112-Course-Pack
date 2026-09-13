@@ -61,7 +61,7 @@ This line of code calls the `MongoClient()` function from `pymongo` to create a 
 On line 11, the response is printed.
 
 >[!NOTE]
-> **TO DO:**
-> 1. Try connecting to your MongoDB Database and print the connection object returned.
-> 2. Copy and Paste lines 1-11 of `connect.py` to a blank python file in your EC2 server.
-> 3. Run the python code by executing `python3 <your_code_filename.py>`
+> **TO DO: Connect to your MongoDB Database and print the connection object returned.**
+> 1. Copy and Paste lines 1-11 of `connect.py` to a blank python file in your EC2 server.
+> 2. Run the python code by executing `python3 <your_code_filename.py>`
+> ![Expected Output is similar to this screenshot](../../assets/04-connect-success.png)
