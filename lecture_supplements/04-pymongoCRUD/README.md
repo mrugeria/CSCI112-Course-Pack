@@ -319,6 +319,10 @@ The output should be like this:<br>
 > **TO DO: Execute a query.**
 > 1. Using your previous querying knowledge, create a query that would show all customers with at least 1 account opened in the "Katipunan" branch from the `ruralSavingsPrime.customerAccounts` 
 > 2. Print the result in the terminal and validate the output.
+>
+
+> [!IMPORTANT]
+> `find_one()` is best used for queries that retrieve documents using the `_id` field (querying a unique document). This is because the parameter is a single dictionary instead of a list of dictionaries and similarly, the response is just 1 dictionary instead of a cursor. In other words, `find_one()` simplifies single document retrievals.
 
 ----
 
@@ -382,6 +386,9 @@ Now, try changing `update_one()` to `update_many()` and do the same steps above 
 > 1. Using your previous updating knowledge, update all customers in `ruralSavingsPrime.customerAccounts` with at least 1 account opened in the "Katipunan" branch to include the `profile` attribute with the value `"Probably Atenean"`. The new attribute must be under the customer's details, not the account's.
 > 2. Validate the output in MongoDB Compass.
 
+> [!IMPORTANT]
+> Like `find_one()`, `update_one()` is best used for update operations that intend to update only 1 document using the `_id` field for simplicity.
+
 ---
 
 ### `delete.py`
@@ -422,3 +429,6 @@ These 3 different queries pertain to the same exact set of documents.
 > **TO DO: Execute the delete functions.**
 > 1. Using the provided queries, use one to execute `delete_one()` and use another to execute `delete_many()`.
 > 2. Validate the output in MongoDB Compass.
+
+> [!IMPORTANT]
+> Like `find_one()`, `delete_one()` is best used for update operations that intend to delete only 1 document using the `_id` field for simplicity.
