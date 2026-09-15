@@ -17,7 +17,7 @@ Before everything else let us cleanup whatever we have in EC2.
 
 Now that our old instances are terminated, let us create a new instance which will serve as our new MongoDB Server.
 
->![NOTE]
+>[!NOTE]
 > We will no longer have 2 instances/servers. We will access the MongoDB database in its own server to reduce network complexity. Thus, we will only need 1 server.
 
 1. Click on Launch Instances on the upper right corner of the EC2 instances page.
