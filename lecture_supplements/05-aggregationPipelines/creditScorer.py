@@ -1,8 +1,8 @@
-import utils
+import pymongo
 
 if __name__ == "__main__":
 
-    conn = utils.establishConnection('localhost')
+    conn = pymongo.MongoClient('localhost', 27017)
     db = conn["ruralSavingsPrime"]
     collection = db["transactions"]
 
@@ -62,3 +62,5 @@ if __name__ == "__main__":
 
     for result in results:
         print(result)
+
+    conn.close()

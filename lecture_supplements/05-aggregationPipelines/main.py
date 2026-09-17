@@ -1,4 +1,5 @@
-import utils, aggregations
+import aggregations
+import pymongo
 
 if __name__ == "__main__":
     """
@@ -6,10 +7,9 @@ if __name__ == "__main__":
     and also see the code executions step by step. Follow the sequence provided in the comments. Make sure to
     comment the previous line before uncommenting and running the next line.
     """
-
-    # Establish MongoDB connection. Make sure to replace localhost accordingly
-    conn = utils.establishConnection('localhost') # Never comment this line as this establishes the connection to MongoDB
     
+    conn = pymongo.MongoClient('localhost', 27017)
+
     # aggregations.tryMatch(conn)
     # aggregations.trySort(conn)
     # aggregations.tryGroup(conn)
@@ -18,6 +18,6 @@ if __name__ == "__main__":
     # aggregations.tryOutSameDb(conn)
     # aggregations.tryOutDifferentDb(conn)
     # aggregations.tryUnwind(conn)
-    aggregations.tryLookup(conn)
+    # aggregations.tryLookup(conn)
 
-    utils.closeConnection(conn) # Never comment this line as this closes the connection to MongoDB
+    conn.close()
