@@ -38,6 +38,8 @@ db.dropDatabase();
 ```
 
 ---
+---
+<br/><br/>
 
 # MongoDB Aggregation Pipelines
 
