@@ -182,9 +182,9 @@ pipeline = [
 ]
 ```
 
-**Wait!** Why does the field names now have `$` signs? When using them in the `$match` stage, we didn't have to include them, right?
-
-This is because in the `$group` stage, we are **referencing** the value of the attribute (accountNumber). If you are comparing existing fields with conditions like in the `$match` stage, you don't need the `$` sign.
+>[!IMPORTANT]
+> **Wait!** Why does the field names now have `$` signs? When using them in the `$match` stage, we didn't have to include them, right?
+> This is because in the `$group` stage, we are **referencing** the value of the attribute (accountNumber). If you are comparing existing fields with conditions like in the `$match` stage, you don't need the `$` sign.
 
 Aside from `$sum`, there are also other aggregation operations like `$avg`, `$min`, `$max` which are pretty descriptive of what they do to your data.
 
@@ -254,7 +254,26 @@ pipeline = [
 
 In this `$project` stage, we removed the `_id` field and transfered its value to the `accountNumber` field which is a new field for our results to look better.
 
-**IMPORTANT NOTE:** Once you exclude fields in a `$project` stage, they will be gone for the rest of the pipeline. So make sure you are only dropping what you really intend to drop.
+>[!IMPORTANT]
+>Once you exclude fields in a `$project` stage, they will be gone for the rest of the pipeline. So make sure you are only dropping what you really intend to drop.
+
+You can also use the `$project` stage to rename fields. For instance, if you want to rename the `vendor` field to `merchant`, you can use the following stage:
+
+```
+pipeline = [
+    {
+        '$project': {
+            'transactionNumber': 1,
+            'customerNumber': 1,
+            'accountNumber': 1,
+            'type': 1,
+            'amount': 1,
+            'merchant': '$vendor',
+            'transactionDate': 1
+        }
+    }
+]
+```
 
 ### $limit - limiting the number of output documents
 
@@ -305,6 +324,12 @@ pipeline = [
     }
 ]
 ```
+
+>[!IMPORTANT]
+> When you inserted the results to the collection spenders, what did you notice about the output?
+> ![Expected Output is similar to this screenshot](../../assets/05-out-stage.png)
+> If you go back to our pipeline, we already set `_id` to 0 but when the `$out` stage was used, new `_id` values were generated.
+> This is due to the nature of inserting records to a collection. Recall that inserting to a collection without specifying an `_id` field will allow MongoDB to generate one for you. If you want another value to be your `_id`, then you must fix it in a `$project` stage before you use the `$out` stage.
 
 If we want to output the results to a collection in a different database, here's how we do it:
 
@@ -377,6 +402,10 @@ pipeline = [
     }
 ]
 ```
+
+>[!IMPORTANT]
+> When you unwind an array, it uses the _id value of the outer object. In our case, the customerNumber will be used as the _id value. You cannot insert this directly to a collection as it will return a duplicate key error. Make sure to use the `$project` stage to change the value of the _id field and make it unique.
+
 
 ### $lookup - Performs one-to-one or one-to-many joins
 
