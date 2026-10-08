@@ -425,7 +425,8 @@ We say that embedding is the best way to go in terms of data modeling in documen
 
 We can always perform a `$lookup` stage in aggregation pipelines. As the name implies, if performs a lookup from a base collection (left table in SQL join) and a lookup collection (right table in SQL join).
 
-**NOTE: We must always limit the lookups that we perform in production applications as this can take up compute power and also time to complete a single `$lookup` aggregation stage. The only way to check if our production lookups make sense is through load testing, or the process of testing big data with our aggregation pipelines before production deployments.**
+>[!IMPORTANT]
+>We must always limit the lookups that we perform in production applications as this can take up compute power and also time to complete a single `$lookup` aggregation stage. The only way to check if our production lookups make sense is through load testing, or the process of testing big data with our aggregation pipelines before production deployments.**
 
 This is the syntax of the `$lookup` stage:
 
@@ -442,14 +443,23 @@ pipeline = [
 ]
 ```
 
-**NOTE: The output object (in the case above, transactions) will always be in array form. Thus, you always need to unwind after lookup to access the array objects effectively. Unless you will directly access each index.
+>[!IMPORTANT]
+> The output object (in the case above, transactions) will always be in array form. Thus, you always need to unwind after lookup to access the array objects effectively. Unless you will directly access each index.
 
 That's it! Let's now put together a simple aggregation pipeline for our test data. (Of course we won't be using all stages in this scenario)
 
 Scenario:
 - As a credit scorer in ruralSavings, you would like to get the top and bottom spender.
 - You need to create 1 aggregation pipeline for the top spender, and 1 for the bottom spender, and output them to 2 different collections — “creditScoreRawTop” and "creditScoreRawBottom", respectively.
-- The output collection should have the object id (_id), customerFirstName, customerLastName, and customerSpend fields.
+- The output collection should have the following schema:
+```
+{
+    '_id': ObjectId('xxxx'), #note: this should be a generated _id upon creation of creditScoreRawTop
+    'customerFirstName': 'xxxx',
+    'customerLastName': 'xxxx',
+    'customerSpend': xxxxx
+}
+```
 
 Note: A transaction is considered spending if the transactionType is “debit”.
 
@@ -539,43 +549,42 @@ Let's create the creditScoreRawTop collection first:
     ]
 ```
 
-
-4. Since the output of unwind is always an array even if only one value is returned, we need to unwind the customer array produced by the previous stage.
+4. Since the output of any `$lookup` stage is always an array, we must unwind first.
 
 ```
     pipeline = [
-        {
-            '$match': {
-                'type': 'debit'
-            }
-        },
-        {
-            '$group': {
-                '_id': '$customerNumber',
-                'customerSpend': {
-                    '$sum': '$amount'
+            {
+                '$match': {
+                    'type': 'debit'
                 }
+            },
+            {
+                '$group': {
+                    '_id': '$customerNumber',
+                    'customerSpend': {
+                        '$sum': '$amount'
+                    }
+                }
+            },
+            {
+                '$sort': {
+                    'customerSpend': -1
+                }
+            },
+            {
+                '$limit': 1
+            },
+            {
+                '$lookup': {
+                    'from': 'customerAccounts',
+                    'localField': '_id',
+                    'foreignField': 'customerNumber',
+                    'as': 'customer'
+                }
+            },
+            {
+                '$unwind': '$customer'
             }
-        },
-        {
-            '$sort': {
-                'customerSpend': -1
-            }
-        },
-        {
-            '$limit': 1
-        },
-        {
-            '$lookup': {
-                'from': 'customerAccounts',
-                'localField': '_id',
-                'foreignField': 'customerNumber',
-                'as': 'customer'
-            }
-        },
-        {
-            '$unwind': '$customer'
-        }
     ]
 ```
 
