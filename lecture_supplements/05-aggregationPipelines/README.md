@@ -188,6 +188,9 @@ pipeline = [
 
 Aside from `$sum`, there are also other aggregation operations like `$avg`, `$min`, `$max` which are pretty descriptive of what they do to your data.
 
+>[!IMPORTANT]
+> Since the `$group` stage requires `_id` to receive the value of the attribute you intend to group by with, the original `_id` values will be dropped. This is logical since you are grouping by the new `_id`, not the old `_id`.
+
 ### $project - limiting the output fields
 
 Our output in the previous pipelines may be enough for us in terms of format. But what if you only want to retain certain fields? Or even add new fields?
@@ -225,7 +228,13 @@ pipeline = [
 
 is valid.
 
-To remove fields in our previous pipeline using `$group`, you can use the following script:
+To format our output with the following schema:
+
+```
+{ 'totalSpending': xxxxx, 'accountNumber': 'xxxxx'}`
+```
+
+we run:
 
 ```
 pipeline = [
@@ -293,7 +302,10 @@ This stage limits the output documents to 100.
 
 ### $out - Outputs the pipeline results to a collection
 
-The `$out` stage allows you to store the output of your Aggregation Pipeline to a collection. Take note though that this stage is **desctructive**. Using `$out` to store the output to a non-empty collection will replace its contents. Thus, always be careful when using this stage.
+The `$out` stage allows you to store the output of your Aggregation Pipeline to a collection. 
+
+>[!IMPORTANT]
+> Take note though that this stage is **desctructive**. Using `$out` to store the output to a non-empty collection will replace its contents. Thus, always be careful when using this stage.
 
 If we want to output our spending aggregation dataset to a `spenders` collection in the same database, here's how we do it:
 
