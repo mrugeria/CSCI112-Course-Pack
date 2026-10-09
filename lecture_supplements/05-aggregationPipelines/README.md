@@ -134,7 +134,7 @@ To achieve this, we can use the `$sort` stage. This is the syntax:
 pipeline = [
     {
         '$sort': {
-            `age`: 1
+            'age': 1
         }
     }
 ]
