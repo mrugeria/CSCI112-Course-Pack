@@ -124,6 +124,8 @@ Whatever is inside the `$match` value object will be considered as your query co
 
 ### $sort - sorting result datasets
 
+#### Basic Sorting
+
 Once we have queried the documents we need, we might need them to be in a particular order. We may need them in ascending order to get the bottom result relative to a particular value, or the top result using a descending order.
 
 To achieve this, we can use the `$sort` stage. This is the syntax:
@@ -137,6 +139,8 @@ pipeline = [
     }
 ]
 ```
+
+#### Changing the Sort Direction
 
 This `$sort` stage will sort your documents in the ascending order. Replacing `1` with `-1` will sort the documents in descending order.
 
@@ -160,7 +164,24 @@ pipeline = [
 
 In this sequence, the pipeline filters the documents in the collection first, before sorting the `$match` stage's results. If you reverse the order, then the sorting will be executed first before the filtering.
 
+#### Sorting Using Multiple Attributes
+
+Multiple attributes can be used to sort objects. See this example below where the documents in our `$transactions` collection is sorted by amount, ascending and transactionDate, descending:
+
+```
+pipeline = [
+    {
+        '$sort': {
+            'amount': 1,
+            'tranactionDate': -1
+        }
+    }
+]
+```
+
 ### $group - aggregating results
+
+#### Basic Group Stage
 
 Let's say you need to get the total amount of transactions for each account from the `ruralSavingsPrime.transactions` collection. You can achieve that using `$group`. Here is the syntax:
 
@@ -182,16 +203,57 @@ pipeline = [
 ]
 ```
 
+#### Referencing Attribute Values in a Stage
+
 >[!IMPORTANT]
 > **Wait!** Why does the field names now have `$` signs? When using them in the `$match` stage, we didn't have to include them, right?
 > This is because in the `$group` stage, we are **referencing** the value of the attribute (accountNumber). If you are comparing existing fields with conditions like in the `$match` stage, you don't need the `$` sign.
+
+#### Group Operations
 
 Aside from `$sum`, there are also other aggregation operations like `$avg`, `$min`, `$max` which are pretty descriptive of what they do to your data.
 
 >[!IMPORTANT]
 > Since the `$group` stage requires `_id` to receive the value of the attribute you intend to group by with, the original `_id` values will be dropped. This is logical since you are grouping by the new `_id`, not the old `_id`.
 
+#### Grouping by Multiple Attributes
+
+You can also group by multiple attributes by creating multiple key-value pair object inside the _id field. See example below:
+
+```
+pipeline = [
+        {
+            '$group': {
+                '_id': {
+                    'accountNumber': '$accountNumber',
+                    'type': '$type',
+                    'vendor': '$vendor'
+                },
+                'totalSpendingByType': {
+                    '$sum': '$amount'
+                }
+            }
+        }
+    ]
+```
+
+This operation groups by accountNumber, type, and vendor. The output would look like this:
+
+```
+...
+{'_id': {'accountNumber': 'RSAN219919', 'type': 'credit', 'vendor': 'Fujifilm'}, 'totalSpendingByType': 11211700}
+{'_id': {'accountNumber': 'RSAN476446', 'type': 'credit', 'vendor': 'Arabica'}, 'totalSpendingByType': 11132275}
+{'_id': {'accountNumber': 'RSAN873199', 'type': 'debit', 'vendor': 'Sony'}, 'totalSpendingByType': 3863910}
+{'_id': {'accountNumber': 'RSAN785539', 'type': 'debit', 'vendor': 'Shakeys'}, 'totalSpendingByType': 5825308}
+...
+```
+
+>[!IMPORTANT]
+> Since `_id` is an object, how do you flatten it such that the fields used for grouping will be its own attribute instead of an object instead of an `_id`? You can use the `$project` stage which is discussed in the next section.
+
 ### $project - limiting the output fields
+
+#### Basic Project Stage (Inclusion and Exclusion of Attributes)
 
 Our output in the previous pipelines may be enough for us in terms of format. But what if you only want to retain certain fields? Or even add new fields?
 
@@ -227,6 +289,8 @@ pipeline = [
 ```
 
 is valid.
+
+#### Using Project to Format Schemas
 
 To format our output with the following schema:
 
@@ -266,6 +330,8 @@ In this `$project` stage, we removed the `_id` field and transfered its value to
 >[!IMPORTANT]
 >Once you exclude fields in a `$project` stage, they will be gone for the rest of the pipeline. So make sure you are only dropping what you really intend to drop.
 
+#### Using Project to Rename Fields
+
 You can also use the `$project` stage to rename fields. For instance, if you want to rename the `vendor` field to `merchant`, you can use the following stage:
 
 ```
@@ -282,6 +348,61 @@ pipeline = [
         }
     }
 ]
+```
+
+#### Using Project to Flatten Objects
+
+In the previous `$group` stage, we said that grouping with multiple attributes produces an `_id` field that is in object form like this:
+
+```
+...
+{'_id': {'accountNumber': 'RSAN219919', 'type': 'credit', 'vendor': 'Fujifilm'}, 'totalSpendingByType': 11211700}
+{'_id': {'accountNumber': 'RSAN476446', 'type': 'credit', 'vendor': 'Arabica'}, 'totalSpendingByType': 11132275}
+{'_id': {'accountNumber': 'RSAN873199', 'type': 'debit', 'vendor': 'Sony'}, 'totalSpendingByType': 3863910}
+{'_id': {'accountNumber': 'RSAN785539', 'type': 'debit', 'vendor': 'Shakeys'}, 'totalSpendingByType': 5825308}
+...
+```
+
+To flatten our _id field and make these results follow this schema, we can use this pipeline below. Take note of the last stage which is the project stage.
+
+```
+pipeline = [
+    {
+        '$group': {
+            '_id': {
+                'accountNumber': '$accountNumber',
+                'type': '$type',
+                'vendor': '$vendor'
+            },
+            'totalSpendingByType': {
+                '$sum': '$amount'
+            }
+        }
+    },
+    {
+        '$project': {
+            '_id': 0, #remove the _id field
+            'accountNumber': '$_id.accountNumber',
+            'type': '$_id.type',
+            'vendor': '$_id.vendor',
+            'totalSpendingByType': 1
+        }
+    }
+]
+```
+
+This will yield the following output or something similar (attribute order may change):
+
+```
+...
+{'totalSpendingByType': 3633400, 'accountNumber': 'RSAN773988', 'type': 'credit', 'vendor': 'Sony'}
+{'totalSpendingByType': 867374, 'accountNumber': 'RSAN458792', 'type': 'credit', 'vendor': 'Shakeys'}
+{'totalSpendingByType': 5605009, 'accountNumber': 'RSAN437497', 'type': 'debit', 'vendor': 'Big Camera'}
+{'totalSpendingByType': 1220355, 'accountNumber': 'RSAN620539', 'type': 'debit', 'vendor': 'McDonalds'}
+{'totalSpendingByType': 6404113, 'accountNumber': 'RSAN247017', 'type': 'debit', 'vendor': 'EasyPC'}
+{'totalSpendingByType': 2213449, 'accountNumber': 'RSAN904206', 'type': 'credit', 'vendor': 'SM Store'}
+{'totalSpendingByType': 6395531, 'accountNumber': 'RSAN955095', 'type': 'credit', 'vendor': 'CoffeeNow'}
+...
 ```
 
 ### $limit - limiting the number of output documents
@@ -301,6 +422,8 @@ pipeline = [
 This stage limits the output documents to 100.
 
 ### $out - Outputs the pipeline results to a collection
+
+#### Basic Out Stage
 
 The `$out` stage allows you to store the output of your Aggregation Pipeline to a collection. 
 
@@ -343,6 +466,8 @@ pipeline = [
 > If you go back to our pipeline, we already set `_id` to 0 but when the `$out` stage was used, new `_id` values were generated.
 > This is due to the nature of inserting records to a collection. Recall that inserting to a collection without specifying an `_id` field will allow MongoDB to generate one for you. If you want another value to be your `_id`, then you must fix it in a `$project` stage before you use the `$out` stage.
 
+#### Using the Out Stage to Output to a Different Database
+
 If we want to output the results to a collection in a different database, here's how we do it:
 
 ```
@@ -378,7 +503,8 @@ pipeline = [
 
 This outputs the result to the `spenders` collection in the `ruralSavingsPrimeAnalytics` database.
 
-**NOTE:** When using `$out`, make sure you are providing an `_id` field that has unique values. You may also remove the `_id` field so that the `$out` stage generates them for you. Otherwise, you'll encounter an error.
+>[!IMPORTANT]
+> When using `$out`, make sure you are providing an `_id` field that has unique values. You may also remove the `_id` field so that the `$out` stage generates them for you. Otherwise, you'll encounter an error.
 
 ### $unwind - Deconstructs arrays
 
@@ -444,7 +570,7 @@ pipeline = [
 ```
 
 >[!IMPORTANT]
-> The output object (in the case above, transactions) will always be in array form. Thus, you always need to unwind after lookup to access the array objects effectively. Unless you will directly access each index.
+> The output object (in the case above, transactions) will always be in array form even if it is a 1:1 match. Thus, you always need to unwind after lookup to access the array objects effectively. Unless you will directly access each index.
 
 That's it! Let's now put together a simple aggregation pipeline for our test data. (Of course we won't be using all stages in this scenario)
 
