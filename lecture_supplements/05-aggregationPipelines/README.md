@@ -536,13 +536,74 @@ To do this, we can use the following script:
 ```
 pipeline = [
     {
+        '$project': {
+            '_id': 0,
+            'customerNumber': 1,
+            'accounts': 1
+        }
+    },
+    {
         '$unwind': '$accounts'
     }
 ]
 ```
 
 >[!IMPORTANT]
-> When you unwind an array, it uses the _id value of the outer object. In our case, the customerNumber will be used as the _id value. You cannot insert this directly to a collection as it will return a duplicate key error. Make sure to use the `$project` stage to change the value of the _id field and make it unique.
+> When unwinding an array like the `$accounts` array in our example, the attributes outside of the array will be duplicated among the resulting flattened array. Notice how `customerNumber` is repeated across all accounts.
+
+>[!WARNING]
+> When you unwind an array, it uses the _id value of the outer object (if it exists). You cannot insert this directly to a collection as it will return a duplicate key error. Make sure to use the `$project` stage to change the value of the _id field and make it unique.
+> In our case, the `_id` field uses the value of the customerNumber. This this will trigger the duplicate key error.
+
+#### Unwind Output is an Object Using the Array's Attribute Name
+
+If you take a look at the result of the previous pipeline, you will notice that the flattened Array value is separated per row, but the values are still inside the `accounts` object.
+
+```
+...
+{'customerNumber': 'RSCN686529', 'accounts': {'accountNumber': 'RSAN799082', 'cardNumber': '6011635744948792', 'creditLimit': 3721622, 'activeIndicator': True, 'branch': 'Katipunan'}, '_id': 'RSCN686529'}
+{'customerNumber': 'RSCN686529', 'accounts': {'accountNumber': 'RSAN826699', 'cardNumber': '4682958426745861', 'creditLimit': 4061493, 'activeIndicator': True, 'branch': 'Ortigas Ext'}, '_id': 'RSCN686529'}
+{'customerNumber': 'RSCN686529', 'accounts': {'accountNumber': 'RSAN279789', 'cardNumber': '344683724535669', 'creditLimit': 2183837, 'activeIndicator': False, 'branch': 'Legarda'}, '_id': 'RSCN686529'}
+{'customerNumber': 'RSCN686529', 'accounts': {'accountNumber': 'RSAN922125', 'cardNumber': '569567911007', 'creditLimit': 3650364, 'activeIndicator': True, 'branch': 'Katipunan'}, '_id': 'RSCN686529'}
+...
+```
+
+You can use project to fix this:
+
+```
+pipeline = [
+    {
+        '$project': {
+            '_id': 0,
+            'customerNumber': 1,
+            'accounts': 1
+        }
+    },
+    {
+        '$unwind': '$accounts'
+    },
+    {
+        '$project': {
+            '_id': 0, #remove the _id field
+            'customerNumber': '$customerNumber',
+            'accountNumber': '$accounts.accountNumber',
+            'cardNumber': '$accounts.cardNumber',
+            'creditLimit': '$accounts.creditLimit',
+            'activeIndicator': '$accounts.activeIndicator',
+            'branch': '$accounts.branch'
+        }
+    }
+]
+```
+
+The output should now look like this:
+
+```
+{'customerNumber': 'RSCN686529', 'accountNumber': 'RSAN992851', 'cardNumber': '4904754471837972', 'creditLimit': 428361, 'activeIndicator': False, 'branch': 'Shaw Boulevard'}
+{'customerNumber': 'RSCN686529', 'accountNumber': 'RSAN403433', 'cardNumber': '6541914686550331', 'creditLimit': 2119439, 'activeIndicator': False, 'branch': 'MOA Complex'}
+{'customerNumber': 'RSCN686529', 'accountNumber': 'RSAN699636', 'cardNumber': '180016388378877', 'creditLimit': 1311591, 'activeIndicator': True, 'branch': 'Ortigas Ext'}
+{'customerNumber': 'RSCN686529', 'accountNumber': 'RSAN799082', 'cardNumber': '6011635744948792', 'creditLimit': 3721622, 'activeIndicator': True, 'branch': 'Katipunan'}
+```
 
 
 ### $lookup - Performs one-to-one or one-to-many joins
