@@ -49,6 +49,11 @@ if __name__ == "__main__":
     mongo_host = "localhost"
     mongo_port = 27017
 
+    conn = MongoClient()
+    conn.drop_database('ruralSavingsPrime')
+
+    conn.close()
+
     # Fields you want as datetime
     datetime_fields = ["transactionDate"]
 
